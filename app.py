@@ -1,8 +1,7 @@
-# Adapted from
-#  - https://github.com/KmolYuan/python-solvespace/blob/master/example/PyDemo.py
-#  - Work by Sean
+# adapted from https://github.com/KmolYuan/python-solvespace/blob/master/example/PyDemo.py
 
-from slvs import *
+from footwork.slvs import *
+from footwork.Pad import Pad
 
 sys = System()
 g1 = groupNum(1)
@@ -27,66 +26,27 @@ Normal1 = Normal3d(p3, p4, p5, p6)
 # the origin point and the normal vector
 Workplane1 = Workplane(Point0, Normal1)
 
+origin = Point2d(Workplane1, p0, p1)
+Constraint.on(Workplane1, Point0, origin)
 
-# Square
+### Example of creating and constraining a single pad
 
-# Definitions of points
-p7 = sys.add_param(0)
-p8 = sys.add_param(0)
-Point1 = Point2d(Workplane1, p7, p8)
+# Pad -- The pad is created in an equation system and a workplane
+pad1 = Pad(sys, Workplane1)
 
-p9 = sys.add_param(10)
-p10 = sys.add_param(0)
-Point2 = Point2d(Workplane1, p9, p10)
 
-p11 = sys.add_param(10)
-p12 = sys.add_param(0)
-Point3 = Point2d(Workplane1, p11, p12)
+# The width and height of the pad is constrained
+Constraint.distance(40, Workplane1, pad1.line_right.a(), pad1.line_right.b())
+Constraint.distance(50, Workplane1, pad1.line_top.a(), pad1.line_top.b())
 
-p13 = sys.add_param(10)
-p14 = sys.add_param(10)
-Point4 = Point2d(Workplane1, p13, p14)
+# A construction line is added to fix the pad in space. This construction line
+# goes from the origin to the center of the pad. The line is fixed to be horizontal
+# and then length is set to be 100 units.
+construction_line = LineSegment2d(Workplane1, origin, pad1.point_center)
+Constraint.distance(100, Workplane1, Point0, pad1.point_center)
+Constraint.horizontal(Workplane1, construction_line)
 
-p15 = sys.add_param(10)
-p16 = sys.add_param(10)
-Point5 = Point2d(Workplane1, p15, p16)
-
-p17 = sys.add_param(0)
-p18 = sys.add_param(10)
-Point6 = Point2d(Workplane1, p17, p18)
-
-p19 = sys.add_param(0)
-p20 = sys.add_param(10)
-Point7 = Point2d(Workplane1, p19, p20)
-
-p21 = sys.add_param(0)
-p22 = sys.add_param(0)
-Point8 = Point2d(Workplane1, p21, p22)
-
-Line1 = LineSegment2d(Workplane1, Point1, Point2)
-Line2 = LineSegment2d(Workplane1, Point3, Point4)
-Line3 = LineSegment2d(Workplane1, Point5, Point6)
-Line4 = LineSegment2d(Workplane1, Point7, Point8)
-
-# Constrain edges of lines so the end-points are coincident
-Constraint.on(Workplane1, Point1, Point8)
-Constraint.on(Workplane1, Point2, Point3)
-Constraint.on(Workplane1, Point4, Point5)
-Constraint.on(Workplane1, Point6, Point7)
-
-# Constrain level
-Constraint.vertical(Workplane1, Line2)
-Constraint.vertical(Workplane1, Line4)
-Constraint.horizontal(Workplane1, Line1)
-Constraint.horizontal(Workplane1, Line3)
-
-# Constrain dimensions
-Constraint.distance(100, Workplane1, Point1, Point2)
-Constraint.equal(Workplane1, Line1, Line2)
-
-# Constraint position
-Constraint.distance(0, Workplane1, Point0, Point1)
-
+# The solver can now be set to work
 sys.calculateFaileds = 1
 sys.solve()
 result = sys.result
@@ -103,13 +63,6 @@ else:
     else:
         print("system nonconvergent")
 
-print(Point1.u().value, Point1.v().value)
-print(Point2.u().value, Point2.v().value)
-print(Point3.u().value, Point3.v().value)
-print(Point4.u().value, Point4.v().value)
-print(Point5.u().value, Point5.v().value)
-print(Point6.u().value, Point6.v().value)
-print(Point7.u().value, Point7.v().value)
-print(Point8.u().value, Point8.v().value)
+print(pad1.to_string())
 
 print("{} DOF".format(sys.dof))
