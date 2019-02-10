@@ -78,7 +78,7 @@ class Pad:
         Constraint.midpoint(self.workplane, self.point_center, self.line_diagonal)
 
     def to_string(self):
-        return "Rectangular pad at <{x}, {y}>, w={width}, h={height}".format(
+        return "Rectangular pad at <{x:+6.3f}, {y:+6.3f}>, w={width:6.3f}, h={height:6.3f}".format(
         **{'x': self.point_center.u().value,
         'y': self.point_center.v().value,
         'width': self.point1.u().value - self.point2.u().value,
