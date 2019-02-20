@@ -1,7 +1,6 @@
 # adapted from https://github.com/KmolYuan/python-solvespace/blob/master/example/PyDemo.py
 
-from footwork.slvs import *
-from footwork.Pad import Pad
+from footwork import *
 
 sys = System()
 g1 = groupNum(1)
