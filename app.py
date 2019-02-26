@@ -32,7 +32,7 @@ Constraint.midpoint(Workplane1, footprint.origin, construction_line)
 
 footprint.solve()
 
-print(pad1.to_string())
-print(pad2.to_string())
+print(pad1)
+print(pad2)
 
 print("{} DOF".format(footprint.system.dof))
