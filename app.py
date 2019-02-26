@@ -7,9 +7,9 @@ footprint.setup_system()
 sys = footprint.system
 Workplane1 = footprint.workplane
 
-### Example of creating and constraining a single pad
+### Example of creating and constraining a simple two-pad footprint
 
-# Pad -- The pad is created in an equation system and a workplane
+# Pads -- The pads are created in an equation system and a workplane
 pad1 = Pad(sys, Workplane1, x=-10)
 pad2 = Pad(sys, Workplane1)
 
