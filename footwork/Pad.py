@@ -1,9 +1,10 @@
 from footwork.slvs import *
 
 class Pad:
-    def __init__(self, sys, wp, x=1, y=1, width=1, height=1):
+    def __init__(self, sys, wp, pin_number, x=1, y=1, width=1, height=1):
         self.sys = sys
         self.workplane = wp
+        self.pin_number = pin_number
         self.x = x
         self.y = y
         self.width = width
@@ -65,6 +66,18 @@ class Pad:
         # Line 1-3 (Diagonal)
         self.line_diagonal = LineSegment2d(self.workplane, self.point1, self.point3)
 
+    def kicad_footprint_form(self):
+        """Returns a string representing the KiCAD footprint form."""
+
+        return "(pad {pin_number} smd rect (at {x} {y}) (size {width} {height}) (layers F.Cu F.Paste F.Mask))".format(
+        **{
+        'pin_number': self.pin_number,
+        'x': self.point_center.u().value,
+        'y': self.point_center.v().value,
+        'width': self.point1.u().value - self.point2.u().value,
+        'height': self.point1.v().value - self.point4.v().value}
+        )
+
     def create_constraints(self):
         """Adds constraints to ensure shape of the pad."""
 
@@ -78,8 +91,10 @@ class Pad:
         Constraint.midpoint(self.workplane, self.point_center, self.line_diagonal)
 
     def __str__(self):
-        return "Rectangular pad at <{x:+6.3f}, {y:+6.3f}>, w={width:6.3f}, h={height:6.3f}".format(
-        **{'x': self.point_center.u().value,
+        return "Rectangular pad {pin_number} at <{x:+6.3f}, {y:+6.3f}>, w={width:6.3f}, h={height:6.3f}".format(
+        **{
+        'pin_number': self.pin_number,
+        'x': self.point_center.u().value,
         'y': self.point_center.v().value,
         'width': self.point1.u().value - self.point2.u().value,
         'height': self.point1.v().value - self.point4.v().value}

@@ -15,8 +15,8 @@ class TestSum(unittest.TestCase):
         ### Example of creating and constraining a simple two-pad footprint
 
         # Pads -- The pads are created in an equation system and a workplane
-        pad1 = fw.Pad(sys, Workplane1, x=-10)
-        pad2 = fw.Pad(sys, Workplane1)
+        pad1 = fw.Pad(sys, Workplane1, pin_number=1, x=-10)
+        pad2 = fw.Pad(sys, Workplane1, pin_number=2)
 
         # The width and height of the pad is constrained
         fw.Constraint.distance(40, Workplane1, pad1.line_right.a(), pad1.line_right.b())
@@ -41,6 +41,9 @@ class TestSum(unittest.TestCase):
         distance = abs(pad1.point1.u().value - pad2.point2.u().value)
 
         self.assertEqual(round(distance, 10), desired_distance)
+
+        print(pad1)
+        print(pad1.kicad_footprint_form())
 
 if __name__ == '__main__':
     unittest.main()
