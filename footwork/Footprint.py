@@ -44,7 +44,6 @@ class Footprint:
         # Setup the origin point
         self.origin = slvs.Point2d(self.workplane, p0, p1)
         slvs.Constraint.on(self.workplane, Point0, self.origin)
-        
 
     def solve(self):
         # The solver can now be set to work
