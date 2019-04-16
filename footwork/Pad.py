@@ -67,15 +67,19 @@ class Pad:
         self.line_diagonal = LineSegment2d(self.workplane, self.point1, self.point3)
 
     def get_x(self):
+        """Returns the x coordinate of the center point"""
         return self.point_center.u().value
 
     def get_y(self):
+        """Returns the y coordinate of the center point"""
         return self.point_center.v().value
 
     def get_width(self):
+        """Returns the width of the pad"""
         return self.point1.u().value - self.point2.u().value
 
     def get_height(self):
+        """Returns the height of the pad"""
         return self.point1.v().value - self.point4.v().value
 
     def kicad_footprint_form(self):
