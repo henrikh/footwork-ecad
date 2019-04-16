@@ -7,7 +7,7 @@ class TestSum(unittest.TestCase):
     def test_two_pad_footprint(self):
         footprint = fw.Footprint("test")
 
-        footprint.setup_system()
+        footprint.set_up_system()
 
         Workplane1 = footprint.workplane
 

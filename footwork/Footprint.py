@@ -16,8 +16,8 @@ class Footprint:
 
         self.nodes[node.id] = node
 
-    def setup_system(self):
-        # Setup equation system
+    def set_up_system(self):
+        # Set up equation system
         self.system = slvs.System()
         g1 = slvs.groupNum(1)
         self.system.default_group = g1
