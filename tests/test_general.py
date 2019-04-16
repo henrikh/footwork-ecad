@@ -50,7 +50,7 @@ class TestSum(unittest.TestCase):
         self.assertEqual(round(pad2.get_width(), 10), 50)
 
         print(pad1)
-        print(pad1.kicad_footprint_form())
+        print(footprint.kicad_footprint_form())
 
 if __name__ == '__main__':
     unittest.main()

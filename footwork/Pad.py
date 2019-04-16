@@ -95,15 +95,6 @@ class Pad:
         """Returns the height of the pad"""
         return self.point1.v().value - self.point4.v().value
 
-    def kicad_footprint_form(self):
-        """Returns a string representing the KiCAD footprint form."""
-
-        return \
-            f"(pad {self.pin_number} " \
-            f"smd rect (at {self.get_x()} {self.get_y()}) " \
-            f"(size {self.get_width()} {self.get_height()}) " \
-            f"(layers F.Cu F.Paste F.Mask))"
-
     def create_constraints(self):
         """Adds constraints to ensure shape of the pad."""
 
@@ -126,4 +117,11 @@ class Pad:
         'height': self.get_height()}
         )
 
-        
+    def kicad_footprint_form(self):
+        """Returns a string representing the KiCAD footprint form."""
+
+        return \
+            f"(pad {self.pin_number} " \
+            f"smd rect (at {self.get_x()} {self.get_y()}) " \
+            f"(size {self.get_width()} {self.get_height()}) " \
+            f"(layers F.Cu F.Paste F.Mask))"

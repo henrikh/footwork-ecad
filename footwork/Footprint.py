@@ -45,6 +45,19 @@ class Footprint:
         self.origin = slvs.Point2d(self.workplane, p0, p1)
         slvs.Constraint.on(self.workplane, Point0, self.origin)
 
+    def kicad_footprint_form(self):
+        """Returns a string representing the KiCAD footprint form."""
+
+        footprint_string = f"(module {self.name} (layer F.Cu) (tedit 5CB304CA)\n"
+
+        for key in self.nodes:
+            footprint_string += "  "\
+            + self.nodes[key].kicad_footprint_form() + "\n"
+
+        footprint_string += ")"
+
+        return footprint_string
+
     def solve(self):
         # The solver can now be set to work
         self.system.calculateFaileds = 1
