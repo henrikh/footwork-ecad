@@ -9,14 +9,16 @@ class TestSum(unittest.TestCase):
 
         footprint.setup_system()
 
-        sys = footprint.system
         Workplane1 = footprint.workplane
 
         ### Example of creating and constraining a simple two-pad footprint
 
         # Pads -- The pads are created in an equation system and a workplane
-        pad1 = fw.Pad(sys, Workplane1, pin_number=1, x=-10)
-        pad2 = fw.Pad(sys, Workplane1, pin_number=2)
+        pad1 = fw.Pad("1", pin_number=1, x=-10)
+        pad2 = fw.Pad("2", pin_number=2)
+
+        footprint.add_node(pad1)
+        footprint.add_node(pad2)
 
         # The width and height of the pad is constrained
         fw.Constraint.distance(40, Workplane1, pad1.line_right.a(), pad1.line_right.b())

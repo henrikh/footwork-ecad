@@ -12,6 +12,7 @@ class Footprint:
 
     def add_node(self, node):
         node.set_system(system=self.system, workplane=self.workplane)
+        node.build()
 
         self.nodes[node.id] = node
 

@@ -1,15 +1,26 @@
 from footwork.slvs import *
 
 class Pad:
-    def __init__(self, sys, wp, pin_number, x=1, y=1, width=1, height=1):
-        self.sys = sys
-        self.workplane = wp
+    sys = None
+    workplane = None
+
+    def __init__(self, node_id, pin_number, x=1, y=1, width=1, height=1):
+        self.id = node_id
         self.pin_number = pin_number
         self._x = x
         self._y = y
         self._width = width
         self._height = height
 
+    def set_system(self, system, workplane):
+        """Sets the system and workplane used by the constraints
+
+        This method is called by the footprint class."""
+        self.sys = system
+        self.workplane = workplane
+
+    def build(self):
+        """Constructs elements and constraints"""
         self.create_points_and_lines()
         self.create_constraints()
 
@@ -25,6 +36,8 @@ class Pad:
         |/  |
         3---4
         ```"""
+
+        assert(self.sys != None and self.workplane != None)
 
         # Point 1
         p1x = self.sys.add_param(self._x + self._width/2)
