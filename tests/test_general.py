@@ -42,6 +42,11 @@ class TestSum(unittest.TestCase):
 
         self.assertEqual(round(distance, 10), desired_distance)
 
+        self.assertEqual(round(pad1.get_height(), 10), 40)
+        self.assertEqual(round(pad1.get_width(), 10), 50)
+        self.assertEqual(round(pad2.get_height(), 10), 40)
+        self.assertEqual(round(pad2.get_width(), 10), 50)
+
         print(pad1)
         print(pad1.kicad_footprint_form())
 

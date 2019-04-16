@@ -5,10 +5,10 @@ class Pad:
         self.sys = sys
         self.workplane = wp
         self.pin_number = pin_number
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+        self._x = x
+        self._y = y
+        self._width = width
+        self._height = height
 
         self.create_points_and_lines()
         self.create_constraints()
@@ -27,28 +27,28 @@ class Pad:
         ```"""
 
         # Point 1
-        p1x = self.sys.add_param(self.x + self.width/2)
-        p1y = self.sys.add_param(self.y + self.height/2)
+        p1x = self.sys.add_param(self._x + self._width/2)
+        p1y = self.sys.add_param(self._y + self._height/2)
         self.point1 = Point2d(self.workplane, p1x, p1y)
 
         # Point 2
-        p2x = self.sys.add_param(self.x - self.width/2)
-        p2y = self.sys.add_param(self.y + self.height/2)
+        p2x = self.sys.add_param(self._x - self._width/2)
+        p2y = self.sys.add_param(self._y + self._height/2)
         self.point2 = Point2d(self.workplane, p2x, p2y)
 
         # Point 3
-        p3x = self.sys.add_param(self.x - self.width/2)
-        p3y = self.sys.add_param(self.y - self.height/2)
+        p3x = self.sys.add_param(self._x - self._width/2)
+        p3y = self.sys.add_param(self._y - self._height/2)
         self.point3 = Point2d(self.workplane, p3x, p3y)
 
         # Point 4
-        p4x = self.sys.add_param(self.x + self.width/2)
-        p4y = self.sys.add_param(self.y - self.height/2)
+        p4x = self.sys.add_param(self._x + self._width/2)
+        p4y = self.sys.add_param(self._y - self._height/2)
         self.point4 = Point2d(self.workplane, p4x, p4y)
 
         # Center point
-        pcx = self.sys.add_param(self.x)
-        pcy = self.sys.add_param(self.y)
+        pcx = self.sys.add_param(self._x)
+        pcy = self.sys.add_param(self._y)
         self.point_center = Point2d(self.workplane, pcx, pcy)
 
         # Line 1-2 (top)
@@ -66,17 +66,26 @@ class Pad:
         # Line 1-3 (Diagonal)
         self.line_diagonal = LineSegment2d(self.workplane, self.point1, self.point3)
 
+    def get_x(self):
+        return self.point_center.u().value
+
+    def get_y(self):
+        return self.point_center.v().value
+
+    def get_width(self):
+        return self.point1.u().value - self.point2.u().value
+
+    def get_height(self):
+        return self.point1.v().value - self.point4.v().value
+
     def kicad_footprint_form(self):
         """Returns a string representing the KiCAD footprint form."""
 
-        return "(pad {pin_number} smd rect (at {x} {y}) (size {width} {height}) (layers F.Cu F.Paste F.Mask))".format(
-        **{
-        'pin_number': self.pin_number,
-        'x': self.point_center.u().value,
-        'y': self.point_center.v().value,
-        'width': self.point1.u().value - self.point2.u().value,
-        'height': self.point1.v().value - self.point4.v().value}
-        )
+        return \
+            f"(pad {self.pin_number} " \
+            f"smd rect (at {self.get_x()} {self.get_y()}) " \
+            f"(size {self.get_width()} {self.get_height()}) " \
+            f"(layers F.Cu F.Paste F.Mask))"
 
     def create_constraints(self):
         """Adds constraints to ensure shape of the pad."""
@@ -94,10 +103,10 @@ class Pad:
         return "Rectangular pad {pin_number} at <{x:+6.3f}, {y:+6.3f}>, w={width:6.3f}, h={height:6.3f}".format(
         **{
         'pin_number': self.pin_number,
-        'x': self.point_center.u().value,
-        'y': self.point_center.v().value,
-        'width': self.point1.u().value - self.point2.u().value,
-        'height': self.point1.v().value - self.point4.v().value}
+        'x': self.get_x(),
+        'y': self.get_y(),
+        'width': self.get_width(),
+        'height': self.get_height()}
         )
 
         
