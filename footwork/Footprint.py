@@ -10,6 +10,8 @@ class Footprint:
         self.workplane = None
         self.origin = None
 
+        self.set_up_system()
+
     def add_node(self, node):
         node.set_system(system=self.system, workplane=self.workplane)
         node.build()

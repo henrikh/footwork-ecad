@@ -7,8 +7,6 @@ class TestSum(unittest.TestCase):
     def test_two_pad_footprint(self):
         footprint = fw.Footprint("test")
 
-        footprint.set_up_system()
-
         Workplane1 = footprint.workplane
 
         ### Example of creating and constraining a simple two-pad footprint
@@ -54,8 +52,6 @@ class TestSum(unittest.TestCase):
 
     def test_footprint_alignment(self):
         footprint = fw.Footprint("footprint-alignment")
-
-        footprint.set_up_system()
 
         Workplane1 = footprint.workplane
 
