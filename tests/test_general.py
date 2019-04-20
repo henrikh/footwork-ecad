@@ -22,8 +22,8 @@ class TestSum(unittest.TestCase):
         fw.Constraint.distance(footprint, 40, pad1.line_right)
         fw.Constraint.distance(footprint, 50, pad1.line_top)
 
-        fw.slvs.Constraint.equal(Workplane1, pad1.line_right, pad2.line_right)
-        fw.slvs.Constraint.equal(Workplane1, pad1.line_top, pad2.line_top)
+        fw.Constraint.equal(footprint, pad1.line_right, pad2.line_right)
+        fw.Constraint.equal(footprint, pad1.line_top, pad2.line_top)
 
         # We then fix the distance between the two pads' closest edges
         desired_distance = random.randint(0, 100)
@@ -33,8 +33,8 @@ class TestSum(unittest.TestCase):
         # goes between the center of the two pads. The line is fixed to be horizontal
         # and the origin is at the midpoint.
         construction_line = fw.slvs.LineSegment2d(Workplane1, pad1.point_center, pad2.point_center)
-        fw.slvs.Constraint.horizontal(Workplane1, construction_line)
-        c1 = fw.slvs.Constraint.midpoint(Workplane1, footprint.origin, construction_line)
+        fw.Constraint.horizontal(footprint, construction_line)
+        fw.Constraint.midpoint(footprint, footprint.origin, construction_line)
 
         footprint.solve()
 
@@ -79,15 +79,15 @@ class TestSum(unittest.TestCase):
 
         # All widths are equal
         fw.Constraint.distance(footprint, 50, pad1.line_top)
-        fw.slvs.Constraint.equal(Workplane1, pad1.line_top, pad2.line_top)
-        fw.slvs.Constraint.equal(Workplane1, pad1.line_top, pad3.line_top)
-        fw.slvs.Constraint.equal(Workplane1, pad1.line_top, pad4.line_top)
+        fw.Constraint.equal(footprint, pad1.line_top, pad2.line_top)
+        fw.Constraint.equal(footprint, pad1.line_top, pad3.line_top)
+        fw.Constraint.equal(footprint, pad1.line_top, pad4.line_top)
 
         # The aligment contraints are set
-        fw.slvs.Constraint.on(Workplane1, pad2.line_top.a(), pad1.line_top)
-        fw.slvs.Constraint.on(Workplane1, pad3.line_bottom.a(), pad2.line_bottom)
-        fw.slvs.Constraint.on(Workplane1, pad4.line_top.a(), pad3.line_top)
-        fw.slvs.Constraint.on(Workplane1, pad4.line_bottom.a(), pad1.line_bottom)
+        fw.Constraint.on(footprint, pad2.line_top.a(), pad1.line_top)
+        fw.Constraint.on(footprint, pad3.line_bottom.a(), pad2.line_bottom)
+        fw.Constraint.on(footprint, pad4.line_top.a(), pad3.line_top)
+        fw.Constraint.on(footprint, pad4.line_bottom.a(), pad1.line_bottom)
 
         # A few of the heights are defined
         fw.Constraint.distance(footprint, 60, pad1.line_right)
@@ -97,14 +97,14 @@ class TestSum(unittest.TestCase):
         construction_line_1_2 = fw.slvs.LineSegment2d(Workplane1, pad1.point1, pad2.point2)
         construction_line_2_3 = fw.slvs.LineSegment2d(Workplane1, pad2.point4, pad3.point3)
         construction_line_3_4 = fw.slvs.LineSegment2d(Workplane1, pad3.point1, pad4.point2)
-        fw.slvs.Constraint.equal(Workplane1, construction_line_1_2, construction_line_2_3)
-        fw.slvs.Constraint.equal(Workplane1, construction_line_2_3, construction_line_3_4)
+        fw.Constraint.equal(footprint, construction_line_1_2, construction_line_2_3)
+        fw.Constraint.equal(footprint, construction_line_2_3, construction_line_3_4)
 
         # A construction line is added to fix the pad in space. This construction line
         # goes diagonally across the footprint and the midpoint is fixed to the (0,0)
         # coordinate. The length of line fixes the distance between the pads.
         construction_line = fw.slvs.LineSegment2d(Workplane1, pad1.point2, pad4.point4)
-        fw.slvs.Constraint.midpoint(Workplane1, footprint.origin, construction_line)
+        fw.Constraint.midpoint(footprint, footprint.origin, construction_line)
         fw.Constraint.distance(footprint, 260, construction_line)
 
         footprint.solve()
