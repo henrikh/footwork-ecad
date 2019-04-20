@@ -5,7 +5,7 @@ class Footprint:
     def __init__(self, name):
         self.name = name
         self.description = None
-        self.nodes = {}
+        self.nodes = []
         self.system = None
         self.workplane = None
         self.origin = None
@@ -16,7 +16,7 @@ class Footprint:
         node.set_system(system=self.system, workplane=self.workplane)
         node.build()
 
-        self.nodes[node.id] = node
+        self.nodes.append(node)
 
     def set_up_system(self):
         # Set up equation system
@@ -52,9 +52,9 @@ class Footprint:
 
         footprint_string = f"(module {self.name} (layer F.Cu) (tedit 5CB304CA)\n"
 
-        for key in self.nodes:
+        for node in self.nodes:
             footprint_string += "  "\
-            + self.nodes[key].kicad_footprint_form() + "\n"
+            + node.kicad_footprint_form() + "\n"
 
         footprint_string += ")"
 
