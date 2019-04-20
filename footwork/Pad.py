@@ -21,10 +21,10 @@ class Pad:
 
     def build(self):
         """Constructs elements and constraints"""
-        self.create_points_and_lines()
+        self.create_geometry()
         self.create_constraints()
 
-    def create_points_and_lines(self):
+    def create_geometry(self):
         """Adds points and lines to the equation system and the workplane.
 
         Points are arranged according with the quadrants of a coordinate system, like the follwoing diagram:
