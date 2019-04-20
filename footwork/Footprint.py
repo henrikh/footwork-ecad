@@ -1,6 +1,9 @@
 from footwork import slvs
+import pint
 
 class Footprint:
+
+    units = None
 
     def __init__(self, name):
         self.name = name
@@ -11,9 +14,13 @@ class Footprint:
         self.origin = None
 
         self.set_up_system()
+        self.set_up_units()
 
     def add_node(self, node):
-        node.set_system(system=self.system, workplane=self.workplane)
+        node.set_system(
+            system=self.system,
+            workplane=self.workplane,
+            units=self.units)
         node.build()
 
         self.nodes.append(node)
@@ -46,6 +53,9 @@ class Footprint:
         # Setup the origin point
         self.origin = slvs.Point2d(self.workplane, p0, p1)
         slvs.Constraint.on(self.workplane, Point0, self.origin)
+
+    def set_up_units(self):
+        self.units = pint.UnitRegistry()
 
     def kicad_footprint_form(self):
         """Returns a string representing the KiCAD footprint form."""

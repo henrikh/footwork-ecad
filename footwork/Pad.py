@@ -1,23 +1,26 @@
 from footwork import slvs
+import footwork as fw
 
 class Pad:
     sys = None
     workplane = None
+    units = None
 
-    def __init__(self, node_id, pin_number, x=1, y=1, width=1, height=1):
+    def __init__(self, node_id, pin_number, x=None, y=None, width=None, height=None):
         self.id = node_id
         self.pin_number = pin_number
-        self._x = x
-        self._y = y
-        self._width = width
-        self._height = height
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
 
-    def set_system(self, system, workplane):
+    def set_system(self, system, workplane, units):
         """Sets the system and workplane used by the constraints
 
         This method is called by the footprint class."""
         self.sys = system
         self.workplane = workplane
+        self.units = units
 
     def build(self):
         """Constructs elements and constraints"""
@@ -37,31 +40,51 @@ class Pad:
         3---4
         ```"""
 
-        assert(self.sys != None and self.workplane != None)
+        assert(self.sys != None and self.workplane != None and self.units != None)
+
+        if self.x == None:
+            _x = 1
+        else:
+            _x = self.x.m_as(fw.BASE_UNIT)
+
+        if self.y == None:
+            _y = 1
+        else:
+            _y = self.y.m_as(fw.BASE_UNIT)
+
+        if self.width == None:
+            _width = 1
+        else:
+            _width = self.width.m_as(fw.BASE_UNIT)
+
+        if self.height == None:
+            _height = 1
+        else:
+            _height = self.height.m_as(fw.BASE_UNIT)
 
         # Point 1
-        p1x = self.sys.add_param(self._x + self._width/2)
-        p1y = self.sys.add_param(self._y + self._height/2)
+        p1x = self.sys.add_param(_x + _width/2)
+        p1y = self.sys.add_param(_y + _height/2)
         self.point1 = slvs.Point2d(self.workplane, p1x, p1y)
 
         # Point 2
-        p2x = self.sys.add_param(self._x - self._width/2)
-        p2y = self.sys.add_param(self._y + self._height/2)
+        p2x = self.sys.add_param(_x - _width/2)
+        p2y = self.sys.add_param(_y + _height/2)
         self.point2 = slvs.Point2d(self.workplane, p2x, p2y)
 
         # Point 3
-        p3x = self.sys.add_param(self._x - self._width/2)
-        p3y = self.sys.add_param(self._y - self._height/2)
+        p3x = self.sys.add_param(_x - _width/2)
+        p3y = self.sys.add_param(_y - _height/2)
         self.point3 = slvs.Point2d(self.workplane, p3x, p3y)
 
         # Point 4
-        p4x = self.sys.add_param(self._x + self._width/2)
-        p4y = self.sys.add_param(self._y - self._height/2)
+        p4x = self.sys.add_param(_x + _width/2)
+        p4y = self.sys.add_param(_y - _height/2)
         self.point4 = slvs.Point2d(self.workplane, p4x, p4y)
 
         # Center point
-        pcx = self.sys.add_param(self._x)
-        pcy = self.sys.add_param(self._y)
+        pcx = self.sys.add_param(_x)
+        pcy = self.sys.add_param(_y)
         self.point_center = slvs.Point2d(self.workplane, pcx, pcy)
 
         # Line 1-2 (top)
@@ -81,19 +104,19 @@ class Pad:
 
     def get_x(self):
         """Returns the x coordinate of the center point"""
-        return self.point_center.u().value
+        return self.units.Quantity(self.point_center.u().value, fw.BASE_UNIT)
 
     def get_y(self):
         """Returns the y coordinate of the center point"""
-        return self.point_center.v().value
+        return self.units.Quantity(self.point_center.v().value, fw.BASE_UNIT)
 
     def get_width(self):
         """Returns the width of the pad"""
-        return self.point1.u().value - self.point2.u().value
+        return self.units.Quantity(self.point1.u().value - self.point2.u().value, fw.BASE_UNIT)
 
     def get_height(self):
         """Returns the height of the pad"""
-        return self.point1.v().value - self.point4.v().value
+        return self.units.Quantity(self.point1.v().value - self.point4.v().value, fw.BASE_UNIT)
 
     def create_constraints(self):
         """Adds constraints to ensure shape of the pad."""
@@ -108,13 +131,14 @@ class Pad:
         slvs.Constraint.midpoint(self.workplane, self.point_center, self.line_diagonal)
 
     def __str__(self):
-        return "Rectangular pad {pin_number} at <{x:+6.3f}, {y:+6.3f}>, w={width:6.3f}, h={height:6.3f}".format(
+
+        return "Rectangular pad {pin_number} at <{x:+6.3f}, {y:+6.3f}> mm, w={width:6.3f} mm, h={height:6.3f} mm".format(
         **{
         'pin_number': self.pin_number,
-        'x': self.get_x(),
-        'y': self.get_y(),
-        'width': self.get_width(),
-        'height': self.get_height()}
+        'x': self.get_x().m_as(self.units.millimeter),
+        'y': self.get_y().m_as(self.units.millimeter),
+        'width': self.get_width().m_as(self.units.millimeter),
+        'height': self.get_height().m_as(self.units.millimeter)}
         )
 
     def kicad_footprint_form(self):
@@ -122,6 +146,8 @@ class Pad:
 
         return \
             f"(pad {self.pin_number} " \
-            f"smd rect (at {self.get_x()} {self.get_y()}) " \
-            f"(size {self.get_width()} {self.get_height()}) " \
+            f"smd rect (at {self.get_x().m_as(self.units.millimeter)} " \
+            f"{self.get_y().m_as(self.units.millimeter)}) " \
+            f"(size {self.get_width().m_as(self.units.millimeter)} " \
+            f"{self.get_height().m_as(self.units.millimeter)}) " \
             f"(layers F.Cu F.Paste F.Mask))"

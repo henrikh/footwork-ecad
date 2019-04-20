@@ -1,16 +1,17 @@
 from footwork import slvs
+import footwork as fw
 
 class Constraint:
     def distance(footprint, distance, *args):
         if len(args) == 1 \
             and isinstance(args[0], slvs.LineSegment2d):
-            return slvs.Constraint.distance(distance, footprint.workplane,
+            return slvs.Constraint.distance(distance.m_as(fw.BASE_UNIT), footprint.workplane,
                 args[0].a(), args[0].b())
 
         elif len(args) == 2 \
             and isinstance(args[0], slvs.Point2d) \
             and isinstance(args[1], slvs.Point2d):
-            return slvs.Constraint.distance(distance, footprint.workplane,
+            return slvs.Constraint.distance(distance.m_as(fw.BASE_UNIT), footprint.workplane,
                 args[0], args[1])
 
     def equal(footprint, line1, line2):

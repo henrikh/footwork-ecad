@@ -9,7 +9,7 @@ class ConstructionLine:
         self.point1 = point1
         self.point2 = point2
 
-    def set_system(self, system, workplane):
+    def set_system(self, system, workplane, units):
         """Sets the system and workplane used by the constraints
 
         This method is called by the footprint class."""
