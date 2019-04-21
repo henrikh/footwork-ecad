@@ -30,3 +30,6 @@ def on(footprint, a, b):
         return slvs.Constraint.on(footprint.workplane, a, b)
     else:
         return slvs.Constraint.on(footprint.workplane, b, a)
+
+def vertical(footprint, line):
+    return slvs.Constraint.vertical(footprint.workplane, line)
