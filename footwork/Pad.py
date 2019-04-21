@@ -69,18 +69,14 @@ class Pad:
 
         # Point 2
         p2x = self.sys.add_param(_x - _width/2)
-        p2y = self.sys.add_param(_y + _height/2)
-        self.point_2 = slvs.Point2d(self.workplane, p2x, p2y)
+        self.point_2 = slvs.Point2d(self.workplane, p2x, p1y)
 
         # Point 3
-        p3x = self.sys.add_param(_x - _width/2)
         p3y = self.sys.add_param(_y - _height/2)
-        self.point_3 = slvs.Point2d(self.workplane, p3x, p3y)
+        self.point_3 = slvs.Point2d(self.workplane, p2x, p3y)
 
         # Point 4
-        p4x = self.sys.add_param(_x + _width/2)
-        p4y = self.sys.add_param(_y - _height/2)
-        self.point_4 = slvs.Point2d(self.workplane, p4x, p4y)
+        self.point_4 = slvs.Point2d(self.workplane, p1x, p3y)
 
         # Center point
         pcx = self.sys.add_param(_x)
@@ -120,12 +116,6 @@ class Pad:
 
     def create_constraints(self):
         """Adds constraints to ensure shape of the pad."""
-
-        # Horizontal and vertical constraints to ensure rectangularity
-        slvs.Constraint.horizontal(self.workplane, self.line_top)
-        slvs.Constraint.vertical(self.workplane, self.line_left)
-        slvs.Constraint.horizontal(self.workplane, self.line_bottom)
-        slvs.Constraint.vertical(self.workplane, self.line_right)
 
         # Fix the center point to be half-way on the diagonal
         slvs.Constraint.midpoint(self.workplane, self.point_center, self.line_diagonal)
