@@ -65,22 +65,22 @@ class Pad:
         # Point 1
         p1x = self.sys.add_param(_x + _width/2)
         p1y = self.sys.add_param(_y + _height/2)
-        self.point1 = slvs.Point2d(self.workplane, p1x, p1y)
+        self.point_1 = slvs.Point2d(self.workplane, p1x, p1y)
 
         # Point 2
         p2x = self.sys.add_param(_x - _width/2)
         p2y = self.sys.add_param(_y + _height/2)
-        self.point2 = slvs.Point2d(self.workplane, p2x, p2y)
+        self.point_2 = slvs.Point2d(self.workplane, p2x, p2y)
 
         # Point 3
         p3x = self.sys.add_param(_x - _width/2)
         p3y = self.sys.add_param(_y - _height/2)
-        self.point3 = slvs.Point2d(self.workplane, p3x, p3y)
+        self.point_3 = slvs.Point2d(self.workplane, p3x, p3y)
 
         # Point 4
         p4x = self.sys.add_param(_x + _width/2)
         p4y = self.sys.add_param(_y - _height/2)
-        self.point4 = slvs.Point2d(self.workplane, p4x, p4y)
+        self.point_4 = slvs.Point2d(self.workplane, p4x, p4y)
 
         # Center point
         pcx = self.sys.add_param(_x)
@@ -88,19 +88,19 @@ class Pad:
         self.point_center = slvs.Point2d(self.workplane, pcx, pcy)
 
         # Line 1-2 (top)
-        self.line_top = slvs.LineSegment2d(self.workplane, self.point1, self.point2)
+        self.line_top = slvs.LineSegment2d(self.workplane, self.point_1, self.point_2)
 
         # Line 2-3 (left)
-        self.line_left = slvs.LineSegment2d(self.workplane, self.point2, self.point3)
+        self.line_left = slvs.LineSegment2d(self.workplane, self.point_2, self.point_3)
 
         # Line 3-4 (bottom)
-        self.line_bottom = slvs.LineSegment2d(self.workplane, self.point3, self.point4)
+        self.line_bottom = slvs.LineSegment2d(self.workplane, self.point_3, self.point_4)
 
         # Line 4-1 (right)
-        self.line_right = slvs.LineSegment2d(self.workplane, self.point4, self.point1)
+        self.line_right = slvs.LineSegment2d(self.workplane, self.point_4, self.point_1)
 
         # Line 1-3 (Diagonal)
-        self.line_diagonal = slvs.LineSegment2d(self.workplane, self.point1, self.point3)
+        self.line_diagonal = slvs.LineSegment2d(self.workplane, self.point_1, self.point_3)
 
     def get_x(self):
         """Returns the x coordinate of the center point"""
@@ -112,11 +112,11 @@ class Pad:
 
     def get_width(self):
         """Returns the width of the pad"""
-        return self.units.Quantity(self.point1.u().value - self.point2.u().value, fw.BASE_UNIT)
+        return self.units.Quantity(self.point_1.u().value - self.point_2.u().value, fw.BASE_UNIT)
 
     def get_height(self):
         """Returns the height of the pad"""
-        return self.units.Quantity(self.point1.v().value - self.point4.v().value, fw.BASE_UNIT)
+        return self.units.Quantity(self.point_1.v().value - self.point_4.v().value, fw.BASE_UNIT)
 
     def create_constraints(self):
         """Adds constraints to ensure shape of the pad."""

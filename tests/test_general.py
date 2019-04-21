@@ -26,7 +26,7 @@ class TestSum(unittest.TestCase):
 
         # We then fix the distance between the two pads' closest edges
         desired_distance = random.randint(0, 100)
-        fw.Constraint.distance(footprint, desired_distance*mm, pad1.point1, pad2.point2)
+        fw.Constraint.distance(footprint, desired_distance*mm, pad1.point_1, pad2.point_2)
 
         # A construction line is added to fix the pad in space. This construction line
         # goes between the center of the two pads. The line is fixed to be horizontal
@@ -93,11 +93,11 @@ class TestSum(unittest.TestCase):
         fw.Constraint.distance(footprint, 50*mm, pad2.line_right)
         fw.Constraint.distance(footprint, 40*mm, pad4.line_right)
 
-        construction_line_1_2 = fw.ConstructionLine(pad1.point1, pad2.point2)
+        construction_line_1_2 = fw.ConstructionLine(pad1.point_1, pad2.point_2)
         footprint.add_node(construction_line_1_2)
-        construction_line_2_3 = fw.ConstructionLine(pad2.point4, pad3.point3)
+        construction_line_2_3 = fw.ConstructionLine(pad2.point_4, pad3.point_3)
         footprint.add_node(construction_line_2_3)
-        construction_line_3_4 = fw.ConstructionLine(pad3.point1, pad4.point2)
+        construction_line_3_4 = fw.ConstructionLine(pad3.point_1, pad4.point_2)
         footprint.add_node(construction_line_3_4)
 
         fw.Constraint.equal(footprint, construction_line_1_2.line, construction_line_2_3.line)
@@ -106,7 +106,7 @@ class TestSum(unittest.TestCase):
         # A construction line is added to fix the pad in space. This construction line
         # goes diagonally across the footprint and the midpoint is fixed to the (0,0)
         # coordinate. The length of line fixes the distance between the pads.
-        construction_line = fw.ConstructionLine(pad1.point2, pad4.point4)
+        construction_line = fw.ConstructionLine(pad1.point_2, pad4.point_4)
         footprint.add_node(construction_line)
         fw.Constraint.midpoint(footprint, footprint.origin, construction_line.line)
         fw.Constraint.distance(footprint, 260*mm, construction_line.line)
